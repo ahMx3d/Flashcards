@@ -1,15 +1,11 @@
 import React from "react"
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
 
 const DeckCard = ({ title, questions }) => {
 	return (
 		<View style={styles.deckContainer}>
-			<TouchableOpacity onPress={() => console.log("title pressed")}>
-				<Text style={styles.deckTitle}>{title}</Text>
-			</TouchableOpacity>
-			<TouchableOpacity onPress={() => console.log("count pressed")}>
-				<Text style={styles.deckContent}>{questions.length} cards</Text>
-			</TouchableOpacity>
+			<Text style={styles.deckTitle}>{title}</Text>
+			<Text style={styles.deckContent}>{questions.length} cards</Text>
 		</View>
 	)
 }

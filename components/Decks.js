@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react"
-import { FlatList, View } from "react-native"
+import { FlatList, TouchableOpacity, View } from "react-native"
 import { getDecks } from "../utils/api"
 import DeckCard from "./DeckCard"
 
-const Decks = () => {
+const Decks = ({ navigation }) => {
 	const [ decks, setDecks ] = useState([])
 
 	useEffect(() => {
 		setDecks((decks) => decks.concat(Object.values(getDecks())))
 	}, [])
 
-	const renderItem = ({ item }) => <DeckCard {...item} />
+	const renderItem = ({ item }) => (
+		<TouchableOpacity onPress={() => navigation.navigate("DeckDetail")}>
+			<DeckCard {...item} />
+		</TouchableOpacity>
+	)
 
 	return (
-		<View style={{ flex: 1, marginTop: 50 }}>
+		<View style={{ flex: 1 }}>
 			{decks && (
 				<FlatList
 					data={decks}

@@ -1,12 +1,59 @@
 import "react-native-gesture-handler"
 import { NavigationContainer } from "@react-navigation/native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+import { createStackNavigator } from "@react-navigation/stack"
 import { StatusBar } from "expo-status-bar"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import { FontAwesome, Ionicons } from "@expo/vector-icons"
 import Decks from "./components/Decks"
 import NewDeck from "./components/NewDeck"
+import DeckDetail from "./components/DeckDetail"
+
+const DecksStackScreen = () => {
+	const DecksStack = createStackNavigator()
+	return (
+		<DecksStack.Navigator
+    initialRouteName="Decks"
+			screenOptions={{
+				headerTintColor  : "#00f59b",
+				headerStyle      : { backgroundColor: "#000" },
+				headerTitleAlign : "center",
+			}}
+		>
+			<DecksStack.Screen
+				name="Decks"
+				component={Decks}
+				options={{ title: "Decks!" }}
+			/>
+			<DecksStack.Screen
+				name="DeckDetail"
+				component={DeckDetail}
+				options={{ title: "Deck Details!" }}
+			/>
+		</DecksStack.Navigator>
+	)
+}
+
+const NewDeckStackScreen = () => {
+	const NewDeckStack = createStackNavigator()
+	return (
+		<NewDeckStack.Navigator
+    initialRouteName="NewDeck"
+			screenOptions={{
+				headerTintColor  : "#00f59b",
+				headerStyle      : { backgroundColor: "#000" },
+				headerTitleAlign : "center",
+			}}
+		>
+			<NewDeckStack.Screen
+				name="NewDeck"
+				component={NewDeck}
+				options={{ title: "New Deck!" }}
+			/>
+		</NewDeckStack.Navigator>
+	)
+}
 
 const Tabs = () => {
 	const Tab = createMaterialTopTabNavigator()
@@ -31,7 +78,7 @@ const Tabs = () => {
 		>
 			<Tab.Screen
 				name="Decks"
-				component={Decks}
+				component={DecksStackScreen}
 				options={{
 					tabBarLabel : "Decks",
 					tabBarIcon  : ({ focused, color, size = 25 }) => (
@@ -51,7 +98,7 @@ const Tabs = () => {
 			/>
 			<Tab.Screen
 				name="NewDeck"
-				component={NewDeck}
+				component={NewDeckStackScreen}
 				options={{
 					tabBarLabel : "New Deck",
 					tabBarIcon  : ({ focused, color, size = 25 }) => (
