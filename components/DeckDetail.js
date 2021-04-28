@@ -13,7 +13,7 @@ const DeckDetail = ({ navigation, route }) => {
 					styleBtn={{ backgroundColor: "#fff", marginVertical: 5 }}
 					styleTxt={{ color: "#000" }}
 					title="Add Card"
-					onPress={() => console.log("pressed")}
+					onPress={() => navigation.navigate('NewCard')}
 				/>
 				<Button
 					styleBtn={{ backgroundColor: "#000", marginVertical: 5 }}

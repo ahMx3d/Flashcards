@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack"
 import Decks from "../components/Decks"
 import DeckDetail from "../components/DeckDetail"
+import NewCard from '../components/NewCard'
 
 const DecksStackScreen = () => {
 	const DecksStack = createStackNavigator()
@@ -26,6 +27,11 @@ const DecksStackScreen = () => {
 					const { title } = route.params.item
 					return { title }
 				}}
+			/>
+			<DecksStack.Screen
+				name="NewCard"
+				component={NewCard}
+				options={{ title: "Add Card!" }}
 			/>
 		</DecksStack.Navigator>
 	)
