@@ -14,7 +14,7 @@ const DecksStackScreen = () => {
 	const DecksStack = createStackNavigator()
 	return (
 		<DecksStack.Navigator
-    initialRouteName="Decks"
+			initialRouteName="Decks"
 			screenOptions={{
 				headerTintColor  : "#00f59b",
 				headerStyle      : { backgroundColor: "#000" },
@@ -29,7 +29,10 @@ const DecksStackScreen = () => {
 			<DecksStack.Screen
 				name="DeckDetail"
 				component={DeckDetail}
-				options={{ title: "Deck Details!" }}
+				options={({ route }) => {
+					const { title } = route.params.item
+					return { title }
+				}}
 			/>
 		</DecksStack.Navigator>
 	)
@@ -39,7 +42,7 @@ const NewDeckStackScreen = () => {
 	const NewDeckStack = createStackNavigator()
 	return (
 		<NewDeckStack.Navigator
-    initialRouteName="NewDeck"
+			initialRouteName="NewDeck"
 			screenOptions={{
 				headerTintColor  : "#00f59b",
 				headerStyle      : { backgroundColor: "#000" },

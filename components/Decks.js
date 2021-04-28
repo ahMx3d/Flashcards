@@ -11,7 +11,9 @@ const Decks = ({ navigation }) => {
 	}, [])
 
 	const renderItem = ({ item }) => (
-		<TouchableOpacity onPress={() => navigation.navigate("DeckDetail")}>
+		<TouchableOpacity
+			onPress={() => navigation.navigate("DeckDetail", { item })}
+		>
 			<DeckCard {...item} />
 		</TouchableOpacity>
 	)
