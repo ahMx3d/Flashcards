@@ -8,7 +8,9 @@ const Decks = ({ navigation }) => {
 
 	useEffect(() => {
 		getDecksAsync()
-			.then((decks) => setDecks((ds) => ds.concat(Object.values(decks))))
+			.then((decks) =>
+				setDecks((ds) => ds.concat(Object.values(!decks ? {} : decks))),
+			)
 			.catch((error) =>
 				console.warn("Error setting decks into state: ", error),
 			)
