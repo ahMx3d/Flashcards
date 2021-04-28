@@ -1,30 +1,32 @@
-import React from "react"
-import {
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from "react-native"
+import React, { useState } from "react"
+import { StyleSheet, Text, View } from "react-native"
+import Input from "./Input"
+import Button from "./Button"
 
-const NewDeck = () => (
-	<View style={styles.newDeckContainer}>
-		<View style={styles.newDeckTextWrapper}>
-			<Text style={styles.newDeckText}>
-				What is the title of your new deck?
-			</Text>
+const NewDeck = () => {
+	const [ value, setValue ] = useState("")
+	return (
+		<View style={styles.newDeckContainer}>
+			<View style={styles.newDeckTextWrapper}>
+				<Text style={styles.newDeckText}>
+					What is the title of your new deck?
+				</Text>
+			</View>
+			<Input
+				style={styles.newDeckInput}
+				onChangeText={(value) => setValue(value)}
+				value={value}
+				placeholder="Deck Title"
+			/>
+			<Button
+				styleBtn={{ backgroundColor: "#000" }}
+				styleTxt={{ color: "#fff" }}
+				title="Submit"
+				onPress={() => console.log("pressed")}
+			/>
 		</View>
-		<TextInput
-			style={styles.newDeckInput}
-			// onChangeText={}
-			// value={}
-			placeholder="Deck Title"
-		/>
-		<TouchableOpacity style={styles.newDeckButton}>
-			<Text style={styles.newDeckSubmit}>Submit</Text>
-		</TouchableOpacity>
-	</View>
-)
+	)
+}
 
 const styles = StyleSheet.create({
 	container          : {
@@ -44,24 +46,8 @@ const styles = StyleSheet.create({
 		fontWeight : "bold",
 	},
 	newDeckInput       : {
-		height            : 55,
-		marginHorizontal  : 25,
-		marginVertical    : 50,
-		borderWidth       : 2,
-		paddingHorizontal : 10,
-		borderRadius      : 7,
-		fontSize          : 20,
-	},
-	newDeckButton      : {
-		alignSelf         : "center",
-		backgroundColor   : "#000",
-		paddingHorizontal : 45,
-		paddingVertical   : 15,
-		borderRadius      : 7,
-	},
-	newDeckSubmit      : {
-		color    : "#fff",
-		fontSize : 25,
+		marginHorizontal : 25,
+		marginVertical   : 50,
 	},
 })
 

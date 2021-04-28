@@ -1,6 +1,7 @@
 import React from "react"
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import DeckCard from "./DeckCard"
+import Button from "./Button"
 
 const DeckDetail = ({ navigation, route }) => {
 	const { item } = route.params
@@ -8,16 +9,18 @@ const DeckDetail = ({ navigation, route }) => {
 		<View style={styles.detailContainer}>
 			<DeckCard {...item} style={{ borderBottomWidth: 0 }} />
 			<View style={styles.buttonsContainer}>
-				<TouchableOpacity style={[ styles.button, styles.cardButton ]}>
-					<Text style={[ styles.buttonText, styles.cardButtonText ]}>
-						Add Card
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={[ styles.button, styles.quizButton ]}>
-					<Text style={[ styles.buttonText, styles.quizButtonText ]}>
-						Start Quiz
-					</Text>
-				</TouchableOpacity>
+				<Button
+					styleBtn={{ backgroundColor: "#fff", marginVertical: 5 }}
+					styleTxt={{ color: "#000" }}
+					title="Add Card"
+					onPress={() => console.log("pressed")}
+				/>
+				<Button
+					styleBtn={{ backgroundColor: "#000", marginVertical: 5 }}
+					styleTxt={{ color: "#fff" }}
+					title="Start Quiz"
+					onPress={() => console.log("pressed")}
+				/>
 			</View>
 		</View>
 	)
@@ -32,29 +35,6 @@ const styles = StyleSheet.create({
 	buttonsContainer : {
 		alignItems     : "center",
 		justifyContent : "center",
-	},
-	button           : {
-		marginVertical    : 5,
-		alignSelf         : "center",
-		paddingHorizontal : 45,
-		paddingVertical   : 15,
-		borderRadius      : 7,
-	},
-	buttonText       : {
-		fontSize : 25,
-	},
-	quizButton       : {
-		backgroundColor : "#000",
-	},
-	cardButton       : {
-		backgroundColor : "#fff",
-		borderWidth     : 2,
-	},
-	quizButtonText   : {
-		color : "#fff",
-	},
-	cardButtonText   : {
-		color : "#000",
 	},
 })
 
