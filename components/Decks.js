@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react"
 import { FlatList, TouchableOpacity, View } from "react-native"
-import { getDecks } from "../utils/api"
+import { getDecksAsync } from "../utils/helpers"
 import DeckCard from "./DeckCard"
 
 const Decks = ({ navigation }) => {
 	const [ decks, setDecks ] = useState([])
 
 	useEffect(() => {
-		setDecks((decks) => decks.concat(Object.values(getDecks())))
+		getDecksAsync()
+			.then((decks) => setDecks((ds) => ds.concat(Object.values(decks))))
+			.catch((error) =>
+				console.warn("Error setting decks into state: ", error),
+			)
 	}, [])
 
 	const renderItem = ({ item }) => (
