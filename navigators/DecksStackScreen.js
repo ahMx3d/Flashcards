@@ -1,8 +1,9 @@
-import React from 'react'
+import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 import Decks from "../components/Decks"
 import DeckDetail from "../components/DeckDetail"
-import NewCard from '../components/NewCard'
+import NewCard from "../components/NewCard"
+import Quiz from "../components/Quiz"
 
 const DecksStackScreen = () => {
 	const DecksStack = createStackNavigator()
@@ -31,7 +32,12 @@ const DecksStackScreen = () => {
 			<DecksStack.Screen
 				name="NewCard"
 				component={NewCard}
-				options={{ title: "Add Card!" }}
+				options={{ title: "Add Card" }}
+			/>
+			<DecksStack.Screen
+				name="Quiz"
+				component={Quiz}
+				options={{ title: "Quiz" }}
 			/>
 		</DecksStack.Navigator>
 	)

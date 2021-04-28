@@ -13,13 +13,13 @@ const DeckDetail = ({ navigation, route }) => {
 					styleBtn={{ backgroundColor: "#fff", marginVertical: 5 }}
 					styleTxt={{ color: "#000" }}
 					title="Add Card"
-					onPress={() => navigation.navigate('NewCard')}
+					onPress={() => navigation.navigate("NewCard")}
 				/>
 				<Button
 					styleBtn={{ backgroundColor: "#000", marginVertical: 5 }}
 					styleTxt={{ color: "#fff" }}
 					title="Start Quiz"
-					onPress={() => console.log("pressed")}
+					onPress={() => navigation.navigate("Quiz")}
 				/>
 			</View>
 		</View>
