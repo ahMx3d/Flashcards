@@ -18,7 +18,7 @@ const DeckDetail = ({ navigation, item }) => (
 				styleBtn={{ backgroundColor: "#000", marginVertical: 5 }}
 				styleTxt={{ color: "#fff" }}
 				title="Start Quiz"
-				onPress={() => navigation.navigate("Quiz")}
+				onPress={() => navigation.navigate("Quiz", { item })}
 			/>
 		</View>
 	</View>

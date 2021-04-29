@@ -1,34 +1,54 @@
-import React from "react"
+import React, { useState } from "react"
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { connect } from "react-redux"
 import Button from "./Button"
 
-const Quiz = () => (
-	<View style={styles.quizContainer}>
-		<Text style={styles.cardsCount}>2/2</Text>
-		<View style={styles.cardWrapper}>
-			<Text style={styles.cardTitle}>
-				Does React Native work with android?
+const Quiz = (props) => {
+	// dispatch, navigation, route
+	// { deck, title, cardsCount, cards }
+
+	const [ offset, setOffset ] = useState(0)
+	const [ flipper, setFlipper ] = useState(false)
+	const [ score, setScore ] = useState(0)
+
+	return (
+		<View style={styles.quizContainer}>
+			<Text style={styles.cardsCount}>
+				{offset + 1}/{props.cardsCount}
 			</Text>
-			<TouchableOpacity>
-				<Text style={styles.cardFlipper}>Answer</Text>
-			</TouchableOpacity>
+			<View style={styles.cardWrapper}>
+				<Text style={styles.cardTitle}>
+					{flipper ? (
+						props.cards[offset].answer
+					) : (
+						props.cards[offset].question
+					)}
+				</Text>
+				<TouchableOpacity
+					onPress={() => setFlipper((flipper) => !flipper)}
+				>
+					<Text style={styles.cardFlipper}>
+						{flipper ? "Question" : "Answer"}
+					</Text>
+				</TouchableOpacity>
+			</View>
+			<View style={styles.buttonsContainer}>
+				<Button
+					styleBtn={styles.correctButton}
+					styleTxt={{ color: "#fff" }}
+					title="Correct"
+					onPress={() => console.log("pressed")}
+				/>
+				<Button
+					styleBtn={styles.incorrectButton}
+					styleTxt={{ color: "#fff" }}
+					title="Incorrect"
+					onPress={() => console.log("pressed")}
+				/>
+			</View>
 		</View>
-		<View style={styles.buttonsContainer}>
-			<Button
-				styleBtn={styles.correctButton}
-				styleTxt={{ color: "#fff" }}
-				title="Correct"
-				onPress={() => console.log("pressed")}
-			/>
-			<Button
-				styleBtn={styles.incorrectButton}
-				styleTxt={{ color: "#fff" }}
-				title="Incorrect"
-				onPress={() => console.log("pressed")}
-			/>
-		</View>
-	</View>
-)
+	)
+}
 
 const styles = StyleSheet.create({
 	quizContainer    : {
@@ -83,4 +103,15 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default Quiz
+const mapStateToProps = ({ decks }, { route }) => {
+	const { title } = route.params.item
+	const deck = decks[title]
+	return {
+		deck,
+		title      : deck.title,
+		cardsCount : deck.questions.length,
+		cards      : deck.questions,
+	}
+}
+
+export default connect(mapStateToProps)(Quiz)
