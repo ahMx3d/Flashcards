@@ -35,13 +35,12 @@ export const setDeckAsync = async (title) => {
 				...decks,
 				[title] : {
 					title,
-					questions : [],
+					questions : decks[title] ? decks[title].questions : [],
 				},
 			}))
 			.then(async (decks) => {
 				await AsyncStorage.setItem(DECKS_KEY, JSON.stringify(decks))
 			})
-
 	} catch (error) {
 		console.warn("AsyncStorage error setting new deck:", error)
 	}
@@ -65,4 +64,5 @@ export const addCardToDeckAsync = async (title, card) => {
 	}
 }
 
-export const removeDecksAsync = async () => await AsyncStorage.removeItem(DECKS_KEY)
+export const removeDecksAsync = async () =>
+	await AsyncStorage.removeItem(DECKS_KEY)

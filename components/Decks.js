@@ -7,7 +7,7 @@ import {
 	Text,
 	View,
 } from "react-native"
-import { getDecksAsync } from "../utils/helpers"
+import { getDecksAsync, removeDecksAsync } from "../utils/helpers"
 import DeckCard from "./DeckCard"
 
 const Decks = ({ navigation }) => {
@@ -15,6 +15,7 @@ const Decks = ({ navigation }) => {
 	const [ isReady, setIsReady ] = useState(false)
 
 	useEffect(() => {
+		// removeDecksAsync()
 		getDecksAsync()
 			.then((decks) =>
 				setDecks((ds) => ds.concat(Object.values(!decks ? {} : decks))),
@@ -42,7 +43,7 @@ const Decks = ({ navigation }) => {
 			{!decks.length ? (
 				<View style={styles.noDecksContainer}>
 					<Text style={styles.noDecksText}>
-						👋 Not Decks added yet
+						👋 No Decks added yet
 					</Text>
 				</View>
 			) : (
