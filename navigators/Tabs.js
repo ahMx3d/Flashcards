@@ -1,11 +1,18 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import { FontAwesome, Ionicons } from "@expo/vector-icons"
+import { connect } from "react-redux"
 import DecksStackScreen from "./DecksStackScreen"
 import NewDeckStackScreen from "./NewDeckStackScreen"
+import { handleInitialDecks } from "../actions"
 
-const Tabs = () => {
+const Tabs = ({ dispatch }) => {
 	const Tab = createMaterialTopTabNavigator()
+
+	useEffect(() => {
+		dispatch(handleInitialDecks())
+	}, [])
+
 	return (
 		<Tab.Navigator
 			tabBarPosition="bottom"
@@ -63,4 +70,4 @@ const Tabs = () => {
 	)
 }
 
-export default Tabs
+export default connect()(Tabs)

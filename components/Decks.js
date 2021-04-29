@@ -7,23 +7,16 @@ import {
 	Text,
 	View,
 } from "react-native"
-import { getDecksAsync, removeDecksAsync } from "../utils/helpers"
+import { connect } from "react-redux"
+// import { removeDecksAsync } from "../utils/helpers"
 import DeckCard from "./DeckCard"
 
-const Decks = ({ navigation }) => {
-	const [ decks, setDecks ] = useState([])
+const Decks = ({ navigation, decks, dispatch, route }) => {
 	const [ isReady, setIsReady ] = useState(false)
 
 	useEffect(() => {
 		// removeDecksAsync()
-		getDecksAsync()
-			.then((decks) =>
-				setDecks((ds) => ds.concat(Object.values(!decks ? {} : decks))),
-			)
-			.then(() => setIsReady((isReady) => !isReady))
-			.catch((error) =>
-				console.warn("Error setting decks into state: ", error),
-			)
+		setIsReady((isReady) => !isReady)
 	}, [])
 
 	const renderItem = ({ item }) => (
@@ -71,4 +64,6 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default Decks
+const mapStateToProps = ({ decks }) => ({ decks: Object.values(decks) })
+
+export default connect(mapStateToProps)(Decks)
