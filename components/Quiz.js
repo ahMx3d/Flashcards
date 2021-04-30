@@ -8,6 +8,9 @@ import {
 } from "react-native"
 import { connect } from "react-redux"
 import Button from "./Button"
+import styles from "../styles/quiz"
+import { clearLocalNotifications, setLocalNotification } from "../utils/helpers"
+import Score from "./Score"
 
 class Quiz extends Component {
 	state = {
@@ -100,6 +103,7 @@ class Quiz extends Component {
 	submit = (isCorrect) => {
 		this.calculateScore(isCorrect)
 		this.handleQuizLogic()
+		clearLocalNotifications().then(setLocalNotification)
 	}
 
 	render = () => {
@@ -120,40 +124,12 @@ class Quiz extends Component {
 				<ActivityIndicator size="large" color="#00ff00" />
 			</View>
 		) : !quizLength ? (
-			<View
-				style={{
-					flex           : 1,
-					alignItems     : "center",
-					justifyContent : "center",
-				}}
-			>
-				<Text style={{ fontSize: 50, color: "#000" }}>Your Score</Text>
-				<Text style={{ fontSize: 50, color: "#000", letterSpacing: 5 }}>
-					{score}/{cardsCount}
-				</Text>
-				<Button
-					styleBtn={{
-						backgroundColor   : "#000",
-						marginVertical    : 15,
-						paddingHorizontal : 50,
-					}}
-					styleTxt={{ color: "#fff", fontWeight: "bold" }}
-					title="Back"
-					onPress={() => navigation.navigate("DeckDetail")}
-				/>
-				<Button
-					styleBtn={{
-						backgroundColor   : "#000",
-						marginVertical    : 15,
-						paddingHorizontal : 50,
-					}}
-					styleTxt={{ color: "#fff", fontWeight: "bold" }}
-					title="Re-Quiz"
-					onPress={() => {
-						this.handleInitials()
-					}}
-				/>
-			</View>
+			<Score
+				score={score}
+				cardsCount={cardsCount}
+				navigation={navigation}
+				handleInitials={this.handleInitials}
+			/>
 		) : (
 			<View style={styles.quizContainer}>
 				<Text style={styles.cardsCount}>
@@ -187,60 +163,6 @@ class Quiz extends Component {
 		)
 	}
 }
-
-const styles = StyleSheet.create({
-	quizContainer    : {
-		flex              : 1,
-		alignItems        : "center",
-		justifyContent    : "space-around",
-		paddingHorizontal : 10,
-	},
-	cardsCount       : {
-		alignSelf     : "flex-start",
-		fontSize      : 25,
-		fontWeight    : "bold",
-		color         : "#000",
-		letterSpacing : 5,
-	},
-	cardWrapper      : {
-		flex           : 2,
-		alignItems     : "center",
-		justifyContent : "center",
-	},
-	cardTitle        : {
-		fontSize       : 50,
-		textAlign      : "center",
-		marginVertical : 20,
-	},
-	cardFlipper      : {
-		fontSize        : 27,
-		color           : "#ad0600",
-		fontWeight      : "bold",
-		backgroundColor : "transparent",
-	},
-	buttonsContainer : {
-		flex           : 1,
-		alignItems     : "center",
-		justifyContent : "center",
-	},
-	correctButton    : {
-		backgroundColor   : "#006100",
-		marginVertical    : 5,
-		borderColor       : "#006100",
-		borderWidth       : 0,
-		paddingVertical   : 12,
-		paddingHorizontal : 79,
-	},
-	incorrectButton  : {
-		backgroundColor   : "#ad0600",
-		marginVertical    : 5,
-		borderColor       : "#ad0600",
-		borderWidth       : 0,
-		paddingVertical   : 12,
-		paddingHorizontal : 70,
-	},
-	loadingIndicator : { flex: 1, justifyContent: "center" },
-})
 
 const mapStateToProps = ({ decks }, { route }) => {
 	const { title } = route.params.item

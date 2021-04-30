@@ -3,7 +3,6 @@ import { StyleSheet, View } from "react-native"
 import { connect } from "react-redux"
 import DeckCard from "./DeckCard"
 import Button from "./Button"
-import { clearLocalNotifications, setLocalNotification } from "../utils/helpers"
 
 const DeckDetail = ({ navigation, item }) => (
 	<View style={styles.detailContainer}>
@@ -20,7 +19,6 @@ const DeckDetail = ({ navigation, item }) => (
 				styleTxt={{ color: "#fff" }}
 				title="Start Quiz"
 				onPress={() => {
-					clearLocalNotifications().then(setLocalNotification)
 					navigation.navigate("Quiz", { item })
 				}}
 			/>
