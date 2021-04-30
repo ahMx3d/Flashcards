@@ -1,5 +1,55 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import * as Notifications from "expo-notifications"
+import * as Permissions from "expo-permissions"
 import { getDecks } from "./api"
+
+const NOTIFICATION_KEY = "Flashcards:notifications"
+
+export const clearLocalNotifications = async () =>
+	await AsyncStorage.removeItem(NOTIFICATION_KEY).then(
+		Notifications.cancelAllScheduledNotificationsAsync(),
+	)
+
+export const createNotification = () => ({
+	title   : "Review your Flashcards!",
+	body    : "👋 don't forget to review you stats for today",
+	ios     : {
+		sound : true,
+	},
+	android : {
+		sound    : true,
+		priority : "high",
+		sticky   : false,
+		vibrate  : true,
+	},
+})
+
+export const setLocalNotification = async () => {
+	await AsyncStorage.getItem(NOTIFICATION_KEY).then(JSON.parse).then(async (data) => {
+		if (data === null) {
+			await Permissions.askAsync(
+				Permissions.NOTIFICATIONS,
+			).then(async ({ status }) => {
+				if (status === "granted") {
+					Notifications.cancelAllScheduledNotificationsAsync()
+					let tomorrow = new Date()
+					tomorrow.setDate(tomorrow.getDate() + 1)
+					tomorrow.setHours(12)
+					tomorrow.setMinutes(0)
+
+					Notifications.scheduleLocalNotificationAsync(
+						createNotification(),
+						{
+							time   : tomorrow,
+							repeat : "day",
+						},
+					)
+					await AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
+				}
+			})
+		}
+	})
+}
 
 const DECKS_KEY = "Flashcards:decks"
 
