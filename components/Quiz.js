@@ -1,53 +1,172 @@
-import React, { useState } from "react"
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import React, { Component, useState } from "react"
+import {
+	ActivityIndicator,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native"
 import { connect } from "react-redux"
 import Button from "./Button"
 
-const Quiz = (props) => {
-	// dispatch, navigation, route
-	// { deck, title, cardsCount, cards }
+class Quiz extends Component {
+	componentDidMount() {
+		const { cardsCount, cards } = this.props
+		this.setState(({ quiz, questions, answers }) => ({
+			qIndex     : Math.floor(Math.random() * cardsCount),
+			aIndex     : Math.floor(Math.random() * cardsCount),
+			quiz       : quiz.concat(cards),
+			isReady    : true,
+			questions  : questions.concat(
+				cards.map(({ question }) => question),
+			),
+			answers    : answers.concat(cards.map(({ answer }) => answer)),
+			quizLength : cardsCount,
+		}))
+	}
 
-	const [ offset, setOffset ] = useState(0)
-	const [ flipper, setFlipper ] = useState(false)
-	const [ score, setScore ] = useState(0)
+	state = {
+		questions    : [],
+		answers      : [],
+		quizLength   : 0,
+		qIndex       : 0,
+		aIndex       : 0,
+		quiz         : [],
+		isReady      : false,
+		flipper      : false,
+		score        : 0,
+		cardsCounter : 1,
+	}
 
-	return (
-		<View style={styles.quizContainer}>
-			<Text style={styles.cardsCount}>
-				{offset + 1}/{props.cardsCount}
-			</Text>
-			<View style={styles.cardWrapper}>
-				<Text style={styles.cardTitle}>
-					{flipper ? (
-						props.cards[offset].answer
-					) : (
-						props.cards[offset].question
-					)}
+	flip = () => {
+		this.setState(({ flipper }) => ({ flipper: !flipper }))
+	}
+
+	handleQuizLogic = () => {
+		const { cardsCount } = this.props
+		this.setState(
+			({
+				cardsCounter,
+				qIndex,
+				aIndex,
+				questions,
+				answers,
+				quizLength,
+			}) => {
+				const quizNewLength = --quizLength
+				return {
+					cardsCounter :
+						cardsCounter >= cardsCount
+							? cardsCount
+							: ++cardsCounter,
+					flipper      : false,
+					questions    : questions.filter((q, idx) => qIndex !== idx),
+					answers      : answers.filter((a, idx) => aIndex !== idx),
+					qIndex       : Math.floor(Math.random() * quizNewLength),
+					aIndex       : Math.floor(Math.random() * quizNewLength),
+					quizLength   : quizNewLength,
+				}
+			},
+		)
+	}
+
+	calculateScore = (isCorrect) => {
+		this.setState(({ score, questions, qIndex, quiz, answers, aIndex }) => {
+			const questionCard = quiz.filter(
+				({ question }) => question === questions[qIndex],
+			)
+			const [ answer ] = isCorrect
+				? questionCard.map(
+						({ answer }) =>
+							answer === answers[aIndex] ? true : false,
+					)
+				: questionCard.map(
+						({ answer }) =>
+							answer !== answers[aIndex] ? true : false,
+					)
+			return {
+				score : !answer ? score : ++score,
+			}
+		})
+	}
+
+	submit = (isCorrect) => {
+		this.calculateScore(isCorrect)
+		this.handleQuizLogic()
+	}
+
+	render = () => {
+		const { cardsCount, navigation } = this.props,
+			{
+				questions,
+				answers,
+				qIndex,
+				aIndex,
+				flipper,
+				score,
+				cardsCounter,
+				isReady,
+				quizLength,
+			} = this.state
+		return !isReady ? (
+			<View style={styles.loadingIndicator}>
+				<ActivityIndicator size="large" color="#00ff00" />
+			</View>
+		) : !quizLength ? (
+			<View
+				style={{
+					flex           : 1,
+					alignItems     : "center",
+					justifyContent : "center",
+				}}
+			>
+				<Text style={{ fontSize: 50, color: "#000" }}>Your Score</Text>
+				<Text style={{ fontSize: 50, color: "#000", letterSpacing: 5 }}>
+					{score}/{cardsCount}
 				</Text>
-				<TouchableOpacity
-					onPress={() => setFlipper((flipper) => !flipper)}
-				>
-					<Text style={styles.cardFlipper}>
-						{flipper ? "Question" : "Answer"}
+				<Button
+					styleBtn={{
+						backgroundColor   : "#000",
+						marginVertical    : 15,
+						paddingHorizontal : 50,
+					}}
+					styleTxt={{ color: "#fff", fontWeight: "bold" }}
+					title="Home"
+					onPress={() => navigation.push("Decks")}
+				/>
+			</View>
+		) : (
+			<View style={styles.quizContainer}>
+				<Text style={styles.cardsCount}>
+					{cardsCounter}/{cardsCount}
+				</Text>
+				<View style={styles.cardWrapper}>
+					<Text style={styles.cardTitle}>
+						{flipper ? answers[aIndex] : questions[qIndex]}
 					</Text>
-				</TouchableOpacity>
+					<TouchableOpacity onPress={this.flip}>
+						<Text style={styles.cardFlipper}>
+							{flipper ? "Question" : "Answer"}
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.buttonsContainer}>
+					<Button
+						styleBtn={styles.correctButton}
+						styleTxt={{ color: "#fff" }}
+						title="Correct"
+						onPress={() => this.submit(true)}
+					/>
+					<Button
+						styleBtn={styles.incorrectButton}
+						styleTxt={{ color: "#fff" }}
+						title="Incorrect"
+						onPress={() => this.submit(false)}
+					/>
+				</View>
 			</View>
-			<View style={styles.buttonsContainer}>
-				<Button
-					styleBtn={styles.correctButton}
-					styleTxt={{ color: "#fff" }}
-					title="Correct"
-					onPress={() => console.log("pressed")}
-				/>
-				<Button
-					styleBtn={styles.incorrectButton}
-					styleTxt={{ color: "#fff" }}
-					title="Incorrect"
-					onPress={() => console.log("pressed")}
-				/>
-			</View>
-		</View>
-	)
+		)
+	}
 }
 
 const styles = StyleSheet.create({
@@ -101,14 +220,13 @@ const styles = StyleSheet.create({
 		paddingVertical   : 12,
 		paddingHorizontal : 70,
 	},
+	loadingIndicator : { flex: 1, justifyContent: "center" },
 })
 
 const mapStateToProps = ({ decks }, { route }) => {
 	const { title } = route.params.item
 	const deck = decks[title]
 	return {
-		deck,
-		title      : deck.title,
 		cardsCount : deck.questions.length,
 		cards      : deck.questions,
 	}
