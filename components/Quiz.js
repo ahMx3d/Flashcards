@@ -10,21 +10,6 @@ import { connect } from "react-redux"
 import Button from "./Button"
 
 class Quiz extends Component {
-	componentDidMount() {
-		const { cardsCount, cards } = this.props
-		this.setState(({ quiz, questions, answers }) => ({
-			qIndex     : Math.floor(Math.random() * cardsCount),
-			aIndex     : Math.floor(Math.random() * cardsCount),
-			quiz       : quiz.concat(cards),
-			isReady    : true,
-			questions  : questions.concat(
-				cards.map(({ question }) => question),
-			),
-			answers    : answers.concat(cards.map(({ answer }) => answer)),
-			quizLength : cardsCount,
-		}))
-	}
-
 	state = {
 		questions    : [],
 		answers      : [],
@@ -36,6 +21,28 @@ class Quiz extends Component {
 		flipper      : false,
 		score        : 0,
 		cardsCounter : 1,
+	}
+
+	componentDidMount() {
+		this.handleInitials()
+	}
+
+	handleInitials = () => {
+		const { cardsCount, cards } = this.props
+		this.setState(({ quiz, questions, answers }) => ({
+			qIndex       : Math.floor(Math.random() * cardsCount),
+			aIndex       : Math.floor(Math.random() * cardsCount),
+			quiz         : quiz.concat(cards),
+			isReady      : true,
+			questions    : questions.concat(
+				cards.map(({ question }) => question),
+			),
+			answers      : answers.concat(cards.map(({ answer }) => answer)),
+			quizLength   : cardsCount,
+			score        : 0,
+			cardsCounter : 1,
+			flipper      : false,
+		}))
 	}
 
 	flip = () => {
@@ -131,8 +138,20 @@ class Quiz extends Component {
 						paddingHorizontal : 50,
 					}}
 					styleTxt={{ color: "#fff", fontWeight: "bold" }}
-					title="Home"
-					onPress={() => navigation.push("Decks")}
+					title="Back"
+					onPress={() => navigation.navigate("DeckDetail")}
+				/>
+				<Button
+					styleBtn={{
+						backgroundColor   : "#000",
+						marginVertical    : 15,
+						paddingHorizontal : 50,
+					}}
+					styleTxt={{ color: "#fff", fontWeight: "bold" }}
+					title="Re-Quiz"
+					onPress={() => {
+						this.handleInitials()
+					}}
 				/>
 			</View>
 		) : (
